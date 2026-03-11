@@ -174,12 +174,16 @@ def apply_tweaks(node: dict[str, Any], node_tweaks: dict[str, Any]) -> None:
             else:
                 key = "file_path" if field_type == "file" else "value"
                 template_data[tweak_name][key] = tweak_value
+                if "load_from_db" in template_data[tweak_name]:
+                    template_data[tweak_name]["load_from_db"] = False
 
 
 def apply_tweaks_on_vertex(vertex: Vertex, node_tweaks: dict[str, Any]) -> None:
     for tweak_name, tweak_value in node_tweaks.items():
         if tweak_name and tweak_value and tweak_name in vertex.params:
             vertex.params[tweak_name] = tweak_value
+            if tweak_name in vertex.load_from_db_fields:
+                vertex.load_from_db_fields.remove(tweak_name)
 
 
 def process_tweaks(
